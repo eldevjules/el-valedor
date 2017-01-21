@@ -18,8 +18,8 @@ var slapp = Slapp({
 
 var HELP_TEXT = `
 I will respond to the following messages:
-\`help\` - to see this message.
-\`hi\` - to demonstrate a conversation that tracks state.
+\`aiuda\` - para ver este mensage.
+\`novoyir\` - avisar de una ausencia.
 \`thanks\` - to demonstrate a simple response.
 \`<type-any-other-text>\` - to demonstrate a random emoticon response, some of the time :wink:.
 \`attachment\` - to see a Slack attachment message.
@@ -27,26 +27,130 @@ I will respond to the following messages:
 
 
 
-
 //*********************************************
+
 // Reporte de Ausencias con MiValedor
+
 //*********************************************
 
 
-// response to the user typing "help"
+
+//*********************************************
+// Responde al usuario los comandos disponibles
+//*********************************************
+slapp.message('aiuda', ['mention', 'direct_message'], (msg) => {
+  msg.say(HELP_TEXT)
+})
+
+//*********************************************
+// Inicio de reporte de una ausencia
+//*********************************************
 slapp.message('novoyir', ['direct_message'], (msg) => {
+  
+  var state = { requested: Date.now() }
+
   msg.say({
     text: 'Gracias por avisar ',
     attachments: [{
-      text: 'Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque claro para llegar a eso el necesita saber un poco mas basicamente',
+      text: 'Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque claro para llegar a eso el necesita saber un poco mas, básicamente',
       title: 'Mi Valedor - Ausencias',
       image_url: 'http://cdn.memegenerator.es/imagenes/memes/full/18/36/18365537.jpg',
       title_link: 'Kha?',
       color: '#7CD197'
     }]
   })
+  .say({
+    text: 'Oye y cuantos dias faltarás?',
+    attachments: [{
+      text: '',
+      callback_id: 'aviso_dias',
+      actions: [
+        {
+          name: 'answer',
+          text: ':thumbsup:',
+          type: 'button',
+          value: 'up',
+          style: 'default'
+        },
+        {
+          name: 'answer',
+          text: ':thumbsdown:',
+          type: 'button',
+          value: 'down',
+          style: 'default'
+        }
+      ]
+    }]
+  })
+  .route('hanleDaysRequested', state)
 })
 
+//*********************************************
+//Aqui ya vamos a saber cuantos días se pretende pedir
+//*********************************************
+slapp.route('hanleDaysRequested', (msg, state) => {
+  
+  // if they respond with anything other than a button selection,
+  // get them back on track
+  if (msg.type !== 'action') {
+    msg
+      .say('Please choose a Yes or No button :wink:')
+      // notice we have to declare the next route to handle the response
+      // every time. Pass along the state and expire the conversation
+      // 60 seconds from now.
+      .route('hanleDaysRequested', state)
+    return
+  }
+
+  let answer = msg.body.actions[0].value
+  if (answer !== 'yes') {
+    // the answer was not affirmative
+    msg.respond(msg.body.response_url, {
+      text: `OK, not doing it. Whew that was close :cold_sweat:`,
+      delete_original: true
+    })
+    // notice we did NOT specify a route because the conversation is over
+    return
+  }
+
+  // use the state that's been passed through the flow to figure out the
+  // elapsed time
+  var elapsed = (Date.now() - state.requested)/1000
+  msg.respond(msg.body.response_url, {
+    text: `You requested me to do it ${elapsed} seconds ago`,
+    delete_original: true
+  })
+
+  // simulate doing some work and send a confirmation.
+  setTimeout(() => {
+    msg.say('I "did it"')
+  }, 3000)
+
+})
+
+
+// Catch-all for any other responses not handled above
+slapp.message('.*', ['direct_message'], (msg) => {
+  // respond only 40% of the time
+  //if (Math.random() < 0.4) {
+    msg.say([
+      'Este ps si esta bien bonito Estados Unidos, su este.. ¿Como se llama ?...Su Catedral!',
+      'No te preocupes jefa, con que me laves, me planches, me des de comer y me prendas el boiler en la mañana... de lo demás yo me las arreglo solo', 
+      'CARNAL! CARNAVALITOOO!! Te estrañé',
+      'Es un clasico de los Ayeres! NETA que me sale mejor que all JOSE JOEL!!',
+      'Q SABROSOS SON LOS ELOTES CON MAYONESA Y DEL CHILE QUE PICA POCO',
+      'Parece mentira que esten tocando esos temas delante de mi carnalito, que todavía tiene sus piecesitos planos. Deberia de darles vergüenza.',
+      'IRALA! FIJATE! YA ME ECHASTES JABON EN EL OJO!',
+      'Aprobechando que tienes tus manos mojadas ¿No podrías lavar tambien estos tenis del Chino? esque pobrecito tiene que estudiar.',
+      'Yo no soy tan efusivo, más sin embargo, una estraña fuerza me indujo a proponerle lo que viene siendo un beso.',
+      'AMIGA ¿TE LAVO TU CABELLO?',
+      'Siento como que esta bonita amistad que comenzó a germinar, el día de hoy ya está dando sus frutos',
+      'No entiendo tu indiferiencia para conmigo',
+      'Amaá, el Chino va pa mi cuarto a romperme lo que más me gusta "¡MI POSTER DEL AMÉRICA!"',
+      'JIJO... MANO.. QUIEN FUERA KALIMAN!!!'
+    ])
+  //}
+})
 //*********************************************
 
 
@@ -56,10 +160,7 @@ slapp.message('novoyir', ['direct_message'], (msg) => {
 // Setup different handlers for messages
 //*********************************************
 
-// response to the user typing "help"
-slapp.message('help', ['mention', 'direct_message'], (msg) => {
-  msg.say(HELP_TEXT)
-})
+
 
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
 slapp
@@ -106,6 +207,17 @@ slapp
     // At this point, since we don't route anywhere, the "conversation" is over
   })
 
+
+
+
+
+
+
+
+
+
+
+
 // Can use a regex as well
 slapp.message(/^(thanks|thank you)/i, ['mention', 'direct_message'], (msg) => {
   // You can provide a list of responses, and a random one will be chosen
@@ -117,6 +229,9 @@ slapp.message(/^(thanks|thank you)/i, ['mention', 'direct_message'], (msg) => {
     'Anytime :sun_with_face: :full_moon_with_face:'
   ])
 })
+
+
+
 
 // demonstrate returning an attachment...
 slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
@@ -132,13 +247,7 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
   })
 })
 
-// Catch-all for any other responses not handled above
-slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
-  // respond only 40% of the time
-  if (Math.random() < 0.4) {
-    msg.say([':wave:', ':pray:', ':raised_hands:'])
-  }
-})
+
 
 // attach Slapp to express server
 var server = slapp.attachToExpress(express())

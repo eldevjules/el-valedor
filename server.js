@@ -25,6 +25,24 @@ I will respond to the following messages:
 \`attachment\` - to see a Slack attachment message.
 `
 
+
+
+
+//*********************************************
+// Reporte de Ausencias con MiValedor
+//*********************************************
+
+
+// response to the user typing "help"
+slapp.message('novoyir', ['direct_message'], (msg) => {
+  msg.say('Kha?')
+})
+
+//*********************************************
+
+
+
+
 //*********************************************
 // Setup different handlers for messages
 //*********************************************

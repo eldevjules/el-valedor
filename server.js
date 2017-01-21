@@ -35,7 +35,16 @@ I will respond to the following messages:
 
 // response to the user typing "help"
 slapp.message('novoyir', ['direct_message'], (msg) => {
-  msg.say('Kha?')
+  msg.say({
+    text: 'Gracias por avisar ',
+    attachments: [{
+      text: 'Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque claro para llegar a eso el necesita saber un poco mas basicamente',
+      title: 'Mi Valedor - Ausencias',
+      image_url: 'http://cdn.memegenerator.es/imagenes/memes/full/18/36/18365537.jpg',
+      title_link: 'Kha?',
+      color: '#7CD197'
+    }]
+  })
 })
 
 //*********************************************

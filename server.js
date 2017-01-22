@@ -465,11 +465,11 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let absenceType = 'HO';
 
 
-  requestedDate.setHours(10);
-  requestedDate.setMinutes(0);
-  requestedDate.setSeconds(0);
+  dateRequested.setHours(10);
+  dateRequested.setMinutes(0);
+  dateRequested.setSeconds(0);
 
-  let fDate = new Date( requestedDate.toString() );
+  let fDate = new Date( dateRequested.toString() );
   fDate.setHours(20);
 
   let data = {
@@ -479,11 +479,11 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: directLider}}},
       type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
       group: {'es-MX': 'Prestación'},
-      reported_date: {'es-MX': requestedDate},
+      reported_date: {'es-MX': dateRequested},
       full_day: {'es-MX': true},
-      start_time: {'es-MX': requestedDate},
+      start_time: {'es-MX': dateRequested},
       end_time: {'es-MX': fDate},
-      modification_date: {'es-MX': requestedDate},
+      modification_date: {'es-MX': dateRequested},
       status: {'es-MX': 'Aprobada'},
       detail: {'es-MX': ''},
       concept: {'es-MX': 'Ho Prestación 1 Semestre 2017'}
@@ -512,7 +512,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
        'location': 'Karmapulse',
        'description': 'Día de Home Office.',
        'start': {
-           'dateTime': requestedDate,
+           'dateTime': dateRequested,
            'timeZone': 'America/Mexico_City',
        },
        'end': {

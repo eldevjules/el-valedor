@@ -19,9 +19,47 @@ var slapp = Slapp({
 
 var clientManagement = contentfulManagement.createClient({
     accessToken: '241b3000a73311202420e24eb61114c3ddf2d5a22523be2b1e2b13b09515587c'
- })
+})
+
+var clientContentful = contentful.createClient({
+     space: "x9fpf0wxefkr",
+     accessToken: "a2b6fef113ba0c65abafffba281b54daa81f6e2223d3918e6e7d240f04e5e972"
+})
+
 
 var space = "x9fpf0wxefkr";
+
+// Google Calendar 
+const googleAuth = require('google-auth-library');
+const google = require('googleapis');
+
+function googleAuthorize(access_token) {
+   let clientSecret = "RgxBW96tzFrzbzFYcldwQ68i";
+   let clientId = "267758990278-hkisn8d33897mbtknv0df0ue1ht7ovch.apps.googleusercontent.com";
+   let redirectUrl = "http://localhost:8000/auth/callback/google";
+   let auth = new googleAuth();
+   let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+
+   oauth2Client.credentials = {"access_token" : access_token};
+   return oauth2Client;
+}
+
+function createCalendarEvent(auth, event) {
+   let calendar = google.calendar('v3');
+   calendar.events.insert({
+       auth: auth,
+       calendarId: 'primary',
+       resource: event,
+   }, (err, event) => {
+       if (err) {
+           console.log('There was an error contacting the Calendar service: ' + err);
+           return;
+       }
+       console.log('Event created: %s', event.htmlLink);
+   });
+}
+
+// ------------------------------------------
 
 var HELP_TEXT = `
 Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque 
@@ -389,11 +427,45 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
    .catch((error) => console.log(error))
 
   //Crear event en calendar
-
+  let event = {
+               'summary': 'Google I/O 2015',
+               'location': 'Karmapulse',
+               'description': 'Días de Home Office.',
+               'start': {
+                   'dateTime': '2017-05-28T09:00:00-07:00',
+                   'timeZone': 'America/Los_Angeles',
+               },
+               'end': {
+                   'dateTime': '2017-05-28T17:00:00-07:00',
+                   'timeZone': 'America/Los_Angeles',
+               },
+               'recurrence': [
+                   'RRULE:FREQ=DAILY;COUNT=2'
+               ],
+               'attendees': [
+                   {'email': 'lpage@example.com'},
+                   {'email': 'sbrin@example.com'},
+               ],
+               'reminders': {
+                   'useDefault': false,
+                   'overrides': [
+                       {'method': 'email', 'minutes': 24 * 60},
+                       {'method': 'popup', 'minutes': 10},
+                       ],
+               },
+           };
+  //Obtener access_token
+  clientContentful.getEntry('1FBTMIA3e4A0CAUwOKcSoY')
+  .then((entry) => {
+    let auth = googleAuthorize(entry.fields.accessToken)
+    createCalendarEvent(auth, event)
+  })
+  .catch((error) => console.log(error))
 
   msg
     .say('Tu HO ha sido solicitada correctamente para el día '+dateRequested)
     .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+    .say('Se ha agregado tu peticióna tu Google Calendar')
 
 })
 

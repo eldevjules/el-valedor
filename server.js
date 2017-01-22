@@ -529,7 +529,6 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
            'dateTime': fDate.toISOString().split('T')[0] + 'T19:00:00-07:00',
             'timeZone': 'America/Mexico_City',
        },
-       'recurrence': [],
        'attendees': [
            {'email': 'ximena@karmapulse.com'},
        ],

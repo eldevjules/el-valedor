@@ -187,9 +187,10 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
   }
 
   let goToWork = msg.body.actions[0].value
+  msg.respond(msg.body.response_url, { delete_original: true })
   msg.say('Respondiste'+goToWork)
 
-  if (answer == 'yes_work') {
+  if (goToWork == 'yes_work') {
     msg.say('Si vas a trabajar')
   }else{
     msg.say('No vas a trabajar')

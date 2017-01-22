@@ -4,6 +4,7 @@ const express = require('express')
 const Slapp = require('slapp')
 const ConvoStore = require('slapp-convo-beepboop')
 const Context = require('slapp-context-beepboop')
+const moment = require('moment')
 
 // use `PORT` env var on Beep Boop - default to 3000 locally
 var port = process.env.PORT || 3000
@@ -311,7 +312,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   var dateRequested = new Date(dateString);
 
   // user may not have typed text as their next action, ask again and re-route
-  if (!dateString) {
+  if (!dateString || !moment(dateString, 'YYYY-MM-DD').isValid()) {
     return msg
       .say("Al parecer no escribiste un formato de fecha válido, pero a cualquier nos pasa")
       .say("Ahora solo procura ingresarlo en el formato de DD/MM/YYYY")

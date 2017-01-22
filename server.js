@@ -329,29 +329,63 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   msg.say("orale va saludos esau")
   msg.say(`Msg: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
 
-  //Ausencia a insertar
-  // data = {
-  //    fields : {
-  //        name : { 'es-MX' : name },
-  //        paternal_surname: { 'es-MX' : name },
-  //        maternal_surname: { 'es-MX' : name },
-  //        birth_date: { 'es-MX' : '2017-12-12' },
-  //        gender: {'es-MX' : 'hombre'}
-  //    }
-  // }
+  let userIdentifier = '1FBTMIA3e4A0CAUwOKcSoY';
+  let absenceType = 'HO';
+  let absences = {
+    // Home Office Imprevisto
+    HOIm: '5owv8SrNQcqgKOoQ6GyoIM',
+    // Recuperaciòn Mèdica
+    RM: '6Td4Rc39ksacyqgIw4kQEe',
+    //Maternidad/Paternidad
+    MP:'3X9eHPRCDCQ4MoOw8QS4UM',
+    //Home Office
+    HO: '2E9OOlbePeIkaOqsuuU6kE',
+    //Imprevisto Parcial
+    IMP: '3MwlcPWUWAyUW68o2eWWeI',
+    //Vacaciones
+    VACA: '6g9R3v0lgsUwESKquaki8O',
+    //Capacitación
+    CAP: '3C7F7sKPaUUmow2K4Uem0C',
+    //Imprevisto
+    IMP: '6xk43bzavu0E28qYe2YA08'
+  };
+
+  let now = new Date();
+  let reported_date = now.getfullYear()+'-'+now.getMonth()+'-'+now.getDate();
+  let idate = dateRequested.getfullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate();
+  let fdate = dateRequested.getfullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate() + 1;
+
+  data = {
+    fields : {
+      identifier: {'es-MX': absenceType},
+      user: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
+      who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
+      type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
+      group: {'es-MX': 'Prestación'},
+      reported_date: {'es-MX': reported_date},
+      full_day: {'es-MX': true},
+      start_time: {'es-MX': idate},
+      end_time: {'es-MX': fdate},
+      modification_date: {'es-MX': idate},
+      expiration_date: {'es-MX': fdate},
+      status: {'es-MX': 'Aprovada'},
+      detail: {'es-MX': 'I hate my coworkers'},
+      concept: {'es-MX': 'Concepto'}
+    }
+  }
 
   //Insertar en Contenful
-  // contentfulManagement.getSpace(space)
-  // .then((space) ->
-  //   console.log('Space');
-  //   return space.createEntry('absence', data)
-  // )
-  // .then((entry) ->
-  //   console.log(entry.fields)
-  //   res.send entry
-  //   entry.publish()
-  // )
-  // .catch((error) -> console.log(error))
+   contentfulManagement.getSpace(space)
+   .then((space) => {
+      console.log('Space');
+      return space.createEntry('absence', data)
+   })
+   .then((entry) => {
+      console.log(entry.fields)
+      res.send entry
+      entry.publish()
+   })
+   .catch((error) => console.log(error))
 
   //Crear event en calendar
 

@@ -223,7 +223,7 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
           },
           {
             name: 'hotoreport',
-            text: 'Otro día :innocent:',
+            text: 'Un día de estos :innocent:',
             type: 'button',
             value: 'hoBenefit',
             style: 'default'
@@ -326,7 +326,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   // add their reason to state
   state['requestedDate'] = dateRequested;
 
-  msg.say("orale va")
+  msg.say("orale va saludos esau")
   msg.say(`Msg: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
 
   //Ausencia a insertar

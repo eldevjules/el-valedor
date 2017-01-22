@@ -5,6 +5,7 @@ const Slapp = require('slapp')
 const ConvoStore = require('slapp-convo-beepboop')
 const Context = require('slapp-context-beepboop')
 const moment = require('moment')
+const contentful = require('contentful');
 const contentfulManagement = require('contentful-management')
 
 // use `PORT` env var on Beep Boop - default to 3000 locally

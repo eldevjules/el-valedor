@@ -326,7 +326,8 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   // add their reason to state
   state['requestedDate'] = dateRequested;
 
-  msg.say(`Msg: \`\`\`${JSON.stringify(msg)}\`\`\``)
+  msg.say("orale va")
+  msg.say(`Msg: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
 
   //Ausencia a insertar
   // data = {

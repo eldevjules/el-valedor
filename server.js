@@ -48,6 +48,8 @@ slapp.message('novoyir', ['direct_message'], (msg) => {
   msg.say({
     text: '',
     attachments: [{
+      text: '',
+      title: '',
       image_url: 'http://cdn.memegenerator.es/imagenes/memes/full/18/36/18365537.jpg',
       title_link: 'Kha?',
       color: '#7CD197'
@@ -100,7 +102,6 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   }
 
   let answer = msg.body.actions[0].value
-
   if (answer == 'ninguno') {
     // the answer was not affirmative
     msg.respond(msg.body.response_url, {
@@ -110,26 +111,29 @@ slapp.route('hanleDaysRequested', (msg, state) => {
     // notice we did NOT specify a route because the conversation is over
     return
   }
-
   // use the state that's been passed through the flow to figure out the
-  var elapsed = (Date.now() - state.requested)/1000
-  msg.respond(msg.body.response_url, {
-    text: `You requested me to do it ${elapsed} seconds ago`,
-    delete_original: true
-  })
-
-  // simulate doing some work and send a confirmation.
-  setTimeout(() => {
-    msg.say('Ok voy a pedirte mas datos')
-  }, 3000)
+  msg.respond(msg.body.response_url, { delete_original: true })
+  //Bifurca la conversación
+  if (answer == 'uno') {
+    msg.say('Asi que no vendrás un día :thinking_face:').route('handleOneDayAbsence')
+  }else{
+    msg.say('Vas a faltar mas de un día :speak_no_evil:').route('handleMultipleDayAbsence')
+  }
 
 })
 
 
-// Catch-all for any other responses not handled above
+slapp.route('handleOneDayAbsence', (msg) => {
+  msg.say('Vamonos riquis un dia de ausencia')
+})
+
+slapp.route('handleMultipleDayAbsence', (msg) => {
+  msg.say('Vamonos riquis varios dias que no?')
+})
+
+
+// Cacha todas las respuestas que no entienda y te da un poco de sabiduria a cambio
 slapp.message('.*', ['direct_message'], (msg) => {
-  // respond only 40% of the time
-  //if (Math.random() < 0.4) {
     msg.say([
       'Este ps si esta bien bonito Estados Unidos, su este.. ¿Como se llama ?...Su Catedral!',
       'No te preocupes jefa, con que me laves, me planches, me des de comer y me prendas el boiler en la mañana... de lo demás yo me las arreglo solo', 
@@ -151,7 +155,6 @@ slapp.message('.*', ['direct_message'], (msg) => {
       'No creas que no tengo en cuenta todos los bonitos detalles que tienes para conmigo... Nomas ¿Si te molesto con la tele?',
       'No pude dormir nada jefa. Tuve unos sueños bieeen estraños, bien horriblisimos!'
     ])
-  //}
 })
 //*********************************************
 

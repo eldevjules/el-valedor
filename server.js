@@ -311,7 +311,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   var dateRequested = new Date(dateString);
 
   // user may not have typed text as their next action, ask again and re-route
-  if (!dateString || ) {
+  if (!dateString) {
     return msg
       .say("Al parecer no escribiste un formato de fecha válido, pero a cualquier nos pasa")
       .say("Ahora solo procura ingresarlo en el formato de DD/MM/YYYY")

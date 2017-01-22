@@ -17,15 +17,11 @@ var slapp = Slapp({
 
 
 var HELP_TEXT = `
-I will respond to the following messages:
+Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque 
+claro para llegar a eso el necesita saber un poco mas, básicamente:
 \`aiuda\` - para ver este mensage.
 \`novoyir\` - avisar de una ausencia.
-\`thanks\` - to demonstrate a simple response.
-\`<type-any-other-text>\` - to demonstrate a random emoticon response, some of the time :wink:.
-\`attachment\` - to see a Slack attachment message.
 `
-
-
 
 //*********************************************
 
@@ -50,10 +46,8 @@ slapp.message('novoyir', ['direct_message'], (msg) => {
   var state = { requested: Date.now() }
 
   msg.say({
-    text: 'Gracias por avisar ',
+    text: '',
     attachments: [{
-      text: 'Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque claro para llegar a eso el necesita saber un poco mas, básicamente',
-      title: 'Mi Valedor - Ausencias',
       image_url: 'http://cdn.memegenerator.es/imagenes/memes/full/18/36/18365537.jpg',
       title_link: 'Kha?',
       color: '#7CD197'
@@ -110,9 +104,9 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   if (answer == 'ninguno') {
     // the answer was not affirmative
     msg.respond(msg.body.response_url, {
-      text: `OK, muy gracioso. :unamused: #NoMeDespiertesALoTonto  #QueFeoQueSeasAsi `,
       delete_original: true
     })
+    msg.say('OK, muy gracioso. :unamused: #NoMeDespiertesALoTonto  #QueFeoQueSeasAsi')
     // notice we did NOT specify a route because the conversation is over
     return
   }
@@ -154,7 +148,8 @@ slapp.message('.*', ['direct_message'], (msg) => {
       'Es de humanos equivocarse, más sin en cambio, es sublime perdonar.',
       'CHINO.! nunca me imagine que en tu corazon cupiera tanta burla...',
       'A Caray! Hijoles, que pena. Esque se me había olvidado que si invite a comer a Maria de todos los ángeles, por lo mismo de que me salvó mi vida.',
-      'No creas que no tengo en cuenta todos los bonitos detalles que tienes para conmigo... Nomas ¿Si te molesto con la tele?'
+      'No creas que no tengo en cuenta todos los bonitos detalles que tienes para conmigo... Nomas ¿Si te molesto con la tele?',
+      'No pude dormir nada jefa. Tuve unos sueños bieeen estraños, bien horriblisimos!'
     ])
   //}
 })

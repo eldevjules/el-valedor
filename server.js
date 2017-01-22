@@ -275,7 +275,7 @@ slapp.route('handleHomeOffice', (msg, state) => {
       }]
     }) //oye tranquilo viejo
     .say('No recomendamos pedir Home Office el mero día. Algún karma se pondrá triste por esto :slightly_frowning_face:')
-    .say("Pero vamos sabemos que no fue a proposito, cuentanos ¿Que paso?")
+    .say("Pero vamos, sabemos que no fue a proposito, cuentanos ¿Que paso?")
     .route('handleHomeOfficeToday', state)
   }else{
     state['ho_type'] = 'benefit';
@@ -290,7 +290,7 @@ slapp.route('handleHomeOffice', (msg, state) => {
 slapp.route('handleHomeOfficeToday', (msg, state) => {
   var reason = (msg.body.event && msg.body.event.text) || ''
   // user may not have typed text as their next action, ask again and re-route
-  if (!text) {
+  if (!reason) {
     return msg
       .say("Seguimos esperando que nos expliques porque HO para hoy :wink:")
       .route('handleHomeOfficeToday', state)

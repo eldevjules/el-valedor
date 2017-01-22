@@ -76,7 +76,7 @@ function createCalendarEvent(auth, event, msg) {
            return;
        }
        console.log('Event created: %s', event.htmlLink);
-       msg.say('Event created: ' + event.htmlLink);
+       msg.say('Hemos creado un evento en tu calendario para que el resto de equipo este al tanto de esta ausencia :nerd_face: ' + event.htmlLink);
    });
 }
 
@@ -431,9 +431,9 @@ slapp.route('handleHomeOfficeToday', (msg, state) => {
   //********************************************************************
   msg
     .say('Gracias por avisarnos. Ahora podemos organizarnos y seguir ganando en la vida')
-    .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+    //.say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
   //********************************************************************
-  
+
 })
 
 //*********************************************

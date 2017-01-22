@@ -66,17 +66,24 @@ slapp.message('novoyir', ['direct_message'], (msg) => {
       callback_id: 'aviso_dias',
       actions: [
         {
-          name: 'answer',
-          text: ':thumbsup:',
+          name: 'days',
+          text: 'Uno :icecream:',
           type: 'button',
-          value: 'up',
+          value: 'uno',
           style: 'default'
         },
         {
-          name: 'answer',
-          text: ':thumbsdown:',
+          name: 'days',
+          text: 'Varios :fearful:',
           type: 'button',
-          value: 'down',
+          value: 'varios',
+          style: 'default'
+        },
+        {
+          name: 'days',
+          text: 'Ninguno :sweat_smile:',
+          type: 'button',
+          value: 'ninguno',
           style: 'default'
         }
       ]
@@ -90,23 +97,20 @@ slapp.message('novoyir', ['direct_message'], (msg) => {
 //*********************************************
 slapp.route('hanleDaysRequested', (msg, state) => {
   
-  // if they respond with anything other than a button selection,
-  // get them back on track
+  // if they respond with anything other than a button selection, get them back on track
   if (msg.type !== 'action') {
     msg
-      .say('Please choose a Yes or No button :wink:')
-      // notice we have to declare the next route to handle the response
-      // every time. Pass along the state and expire the conversation
-      // 60 seconds from now.
+      .say('Porfavor dinos cuantos días faltarás!!! :rage:')
       .route('hanleDaysRequested', state)
     return
   }
 
   let answer = msg.body.actions[0].value
-  if (answer !== 'yes') {
+
+  if (answer == 'ninguno') {
     // the answer was not affirmative
     msg.respond(msg.body.response_url, {
-      text: `OK, not doing it. Whew that was close :cold_sweat:`,
+      text: `OK, muy gracioso. :unamused:  #QueFeoQueSeasAsi `,
       delete_original: true
     })
     // notice we did NOT specify a route because the conversation is over

@@ -370,7 +370,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       end_time: {'es-MX': sdate},
       modification_date: {'es-MX': sdate},
       expiration_date: {'es-MX': sdate},
-      status: {'es-MX': 'Aprovada'},
+      status: {'es-MX': 'Aprobada'},
       detail: {'es-MX': 'I hate my coworkers'},
       concept: {'es-MX': 'Concepto'}
     }

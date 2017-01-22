@@ -431,6 +431,16 @@ slapp.route('handleHomeOfficeToday', (msg, state) => {
   //********************************************************************
   msg
     .say('Gracias por avisarnos. Ahora podemos organizarnos y seguir ganando en la vida')
+    .say({
+      text: '',
+      attachments: [{
+        text: '',
+        title: '',
+        image_url: 'http://eldia.com.do/wp-content/uploads/2014/06/consejos-trabajar-desde-casa.jpg',
+        title_link: 'HO',
+        color: '#7CD197'
+      }]
+    })
     //.say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
   //********************************************************************
 
@@ -541,7 +551,17 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   msg
     .say('Tu HO ha sido solicitada correctamente para el día '+dateRequested)
     //.say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
-    .say('Se ha agregado tu peticióna tu Google Calendar para que a nadie se nos olvide :ok_hand:')
+    .say('Nos vemos conectados y frescos como lechugas :icecream:')
+    .say({
+      text: '',
+      attachments: [{
+        text: '',
+        title: '',
+        image_url: 'http://eldia.com.do/wp-content/uploads/2014/06/consejos-trabajar-desde-casa.jpg',
+        title_link: 'HO',
+        color: '#7CD197'
+      }]
+    })
   //********************************************************************
 
 })

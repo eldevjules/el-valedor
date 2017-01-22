@@ -5,6 +5,7 @@ const Slapp = require('slapp')
 const ConvoStore = require('slapp-convo-beepboop')
 const Context = require('slapp-context-beepboop')
 const moment = require('moment')
+const contentfulManagement = require('contentful-management')
 
 // use `PORT` env var on Beep Boop - default to 3000 locally
 var port = process.env.PORT || 3000
@@ -16,6 +17,10 @@ var slapp = Slapp({
   context: Context()
 })
 
+clientManagement = contentfulManagement.createClient({
+   accessToken: '241b3000a73311202420e24eb61114c3ddf2d5a22523be2b1e2b13b09515587c'
+})
+space = "x9fpf0wxefkr";
 
 var HELP_TEXT = `
 Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque 
@@ -279,7 +284,7 @@ slapp.route('handleHomeOffice', (msg, state) => {
   }else{
     state['ho_type'] = 'benefit';
     msg.say('Bien! ¿Que día quieres tomar?') 
-    msg.respond(msg.body.response_url, { text:'Usar el formato DD/MM/YYYY' })
+    msg.respond(msg.body.response_url, { text:'Usar el formato YYYY-MM-DD' })
     .route('handleHomeOfficeBenefit', state)
   }
 
@@ -315,16 +320,45 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   if (!dateString || !moment(dateString, 'YYYY-MM-DD').isValid()) {
     return msg
       .say("Al parecer no escribiste un formato de fecha válido, pero a cualquier nos pasa")
-      .say("Ahora solo procura ingresarlo en el formato de DD/MM/YYYY")
+      .say("Ahora solo procura ingresarlo en el formato de YYYY-MM-DD")
       .route('handleHomeOfficeBenefit', state)
   }
   // add their reason to state
   state['requestedDate'] = dateRequested;
 
-  var  humaDate = dateRequested.toString()
+  msg.say(`Msg: \`\`\`${JSON.stringify(msg)}\`\`\``)
+
+  //Ausencia a insertar
+  // data = {
+  //    fields : {
+  //        name : { 'es-MX' : name },
+  //        paternal_surname: { 'es-MX' : name },
+  //        maternal_surname: { 'es-MX' : name },
+  //        birth_date: { 'es-MX' : '2017-12-12' },
+  //        gender: {'es-MX' : 'hombre'}
+  //    }
+  // }
+
+  //Insertar en Contenful
+  // contentfulManagement.getSpace(space)
+  // .then((space) ->
+  //   console.log('Space');
+  //   return space.createEntry('absence', data)
+  // )
+  // .then((entry) ->
+  //   console.log(entry.fields)
+  //   res.send entry
+  //   entry.publish()
+  // )
+  // .catch((error) -> console.log(error))
+
+  //Crear event en calendar
+
+
   msg
     .say('Tu HO ha sido solicitada correctamente para el día '+humaDate)
     .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+
 })
 
 

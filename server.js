@@ -45,6 +45,7 @@ function googleAuthorize(access_token) {
    return oauth2Client;
 }
 
+
 function createCalendarEvent(auth, event, msg) {
    let calendar = google.calendar('v3');
    calendar.events.insert({
@@ -367,10 +368,13 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   // add their reason to state
   state['requestedDate'] = dateRequested;
 
-  msg.say("orale va saludos esau")
-  msg.say(`Msg: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
+  msg.say("Órale va! vamos a hacer la solicitud formal!")
+  //msg.say(`Msg: \`\`\`${JSON.stringify(msg.body)}\`\`\``)
 
-  let userIdentifier = '1FBTMIA3e4A0CAUwOKcSoY';
+  //Get User identifier 
+  let userIdentifier = '58KQf17LzqkOkMCoqUKaMk';
+  let directLider = "7eaE0FMPOE2cMykKEmQQue";
+  //Get absence type
   let absenceType = 'HO';
   let absences = {
     // Home Office Imprevisto
@@ -395,15 +399,15 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let reported_date = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
   let idate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+dateRequested.getDate();
   let fdate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+(dateRequested.getDate() + 1);
-  let sdate = '2017-01-24';
+  let sdate = '2017-01-23';
 
   let data = {
     fields : {
       identifier: {'es-MX': absenceType},
       user: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
-      who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
+      who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: directLider}}},
       type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
-      group: {'es-MX': 'Prestación'},
+      group: {'es-MX': 'Ho por Prestación'},
       reported_date: {'es-MX': sdate},
       full_day: {'es-MX': true},
       start_time: {'es-MX': sdate},
@@ -411,8 +415,8 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       modification_date: {'es-MX': sdate},
       expiration_date: {'es-MX': sdate},
       status: {'es-MX': 'Aprobada'},
-      detail: {'es-MX': 'I hate my coworkers'},
-      concept: {'es-MX': 'Concepto'}
+      detail: {'es-MX': ''},
+      concept: {'es-MX': 'Ho Prestación 1 Semestre 2017'}
     }
   }
 
@@ -430,32 +434,29 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
 
   //Crear event en calendar
   let event = {
-               'summary': 'HomeOffice',
-               'location': 'Karmapulse',
-               'description': 'Días de Home Office.',
-               'start': {
-                   'dateTime': '2017-01-22T09:00:00-07:00',
-                   'timeZone': 'America/Mexico_City',
-               },
-               'end': {
-                   'dateTime': '2017-01-22T09:00:00-07:00',
-                    'timeZone': 'America/Mexico_City',
-               },
-               'recurrence': [],
-               'attendees': [
-                   {'email': 'lpage@example.com'},
-                   {'email': 'sbrin@example.com'},
-               ],
-               'reminders': {
-                   'useDefault': false,
-                   'overrides': [
-                       {'method': 'email', 'minutes': 24 * 60},
-                       {'method': 'popup', 'minutes': 10},
-                       ],
-               },
-           };
+       'summary': 'HomeOffice',
+       'location': 'Karmapulse',
+       'description': 'Día de Home Office.',
+       'start': {
+           'dateTime': '2017-01-23T10:00:00-06:00',
+           'timeZone': 'America/Mexico_City',
+       },
+       'end': {
+           'dateTime': '2017-01-23T20:00:00-06:00',
+            'timeZone': 'America/Mexico_City',
+       },
+       'recurrence': [],
+       'attendees': [
+           {'email': 'ximena@karmapulse.com'},
+       ],
+       'reminders': {
+           'useDefault': false,
+           'overrides': [{'method': 'email', 'minutes': 24 * 60}],
+       },
+   };
+
   //Obtener access_token
-  clientContentful.getEntry('1FBTMIA3e4A0CAUwOKcSoY')
+  clientContentful.getEntry(userIdentifier)
   .then((entry) => {
     let auth = googleAuthorize(entry.fields.accessToken)
     createCalendarEvent(auth, event, msg)
@@ -464,8 +465,8 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
 
   msg
     .say('Tu HO ha sido solicitada correctamente para el día '+dateRequested)
-    .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
-    .say('Se ha agregado tu peticióna tu Google Calendar')
+    //.say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+    .say('Se ha agregado tu peticióna tu Google Calendar para que a nadie se nos olvide :ok_hand:')
 
 })
 

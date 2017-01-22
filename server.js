@@ -407,7 +407,7 @@ slapp.route('handleHomeOfficeToday', (msg, state) => {
    //********************************************************************
   //Crear event en calendar
   let event = {
-       'summary': 'HomeOffice',
+       'summary': 'HomeOffice Imprevisto',
        'location': 'Karmapulse',
        'description': 'Día de Home Office.',
        'start': {
@@ -522,11 +522,11 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
        'location': 'Karmapulse',
        'description': 'Día de Home Office.',
        'start': {
-           'dateTime': dateRequested,
+           'dateTime': dateRequested.toISOString().split('T')[0] + 'T09:00:00-07:00',
            'timeZone': 'America/Mexico_City',
        },
        'end': {
-           'dateTime': fDate,
+           'dateTime': fDate.toISOString().split('T')[0] + 'T19:00:00-07:00',
             'timeZone': 'America/Mexico_City',
        },
        'recurrence': [],

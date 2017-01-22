@@ -45,7 +45,7 @@ function googleAuthorize(access_token) {
    return oauth2Client;
 }
 
-function createCalendarEvent(auth, event) {
+function createCalendarEvent(auth, event, msg) {
    let calendar = google.calendar('v3');
    calendar.events.insert({
        auth: auth,
@@ -57,6 +57,7 @@ function createCalendarEvent(auth, event) {
            return;
        }
        console.log('Event created: %s', event.htmlLink);
+       msg.say('Event created: ' + event.htmlLink);
    });
 }
 
@@ -429,7 +430,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
 
   //Crear event en calendar
   let event = {
-               'summary': 'Google I/O 2015',
+               'summary': 'HomeOffice',
                'location': 'Karmapulse',
                'description': 'Días de Home Office.',
                'start': {
@@ -457,7 +458,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   clientContentful.getEntry('1FBTMIA3e4A0CAUwOKcSoY')
   .then((entry) => {
     let auth = googleAuthorize(entry.fields.accessToken)
-    createCalendarEvent(auth, event)
+    createCalendarEvent(auth, event, msg)
   })
   .catch((error) => console.log(error))
 

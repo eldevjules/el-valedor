@@ -17,10 +17,10 @@ var slapp = Slapp({
   context: Context()
 })
 
-clientManagement = contentfulManagement.createClient({
-   accessToken: '241b3000a73311202420e24eb61114c3ddf2d5a22523be2b1e2b13b09515587c'
-})
-space = "x9fpf0wxefkr";
+// clientManagement = contentfulManagement.createClient({
+//    accessToken: '241b3000a73311202420e24eb61114c3ddf2d5a22523be2b1e2b13b09515587c'
+// })
+// space = "x9fpf0wxefkr";
 
 var HELP_TEXT = `
 Mi valedor te ayduará a avisar al resto de tu equipo que no encotrarás en la oficina, aunque 

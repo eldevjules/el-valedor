@@ -115,6 +115,7 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   msg.respond(msg.body.response_url, { delete_original: true })
   //Bifurca la conversación
   if (answer == 'uno') {
+    state['days'] = 'uno';
     msg.say('Asi que no vendrás un día a la oficina :thinking_face:')
     .say({
       text: 'pero ¿y vas a trabajar? :muscle:',
@@ -133,26 +134,73 @@ slapp.route('hanleDaysRequested', (msg, state) => {
             name: 'doyougotowork',
             text: 'No :sweat_smile:',
             type: 'button',
-            value: 'varios',
+            value: 'no_work',
             style: 'default'
           }
         ]
       }]
     })
-    .route('handleOneDayAbsence')
+    .route('handleOneDayAbsence', state)
   }else{
+    state['days'] = 'varios';
     msg.say('Vas a faltar mas de un día :speak_no_evil:')
-    //.route('handleMultipleDayAbsence')
+    .say({
+      text: 'pero ¿y vas a trabajar? :muscle:',
+      attachments: [{
+        text: '',
+        callback_id: 'aviso_variosdias',
+        actions: [
+          {
+            name: 'doyougotowork',
+            text: 'Si, obvio :nerd_face:',
+            type: 'button',
+            value: 'yes_work',
+            style: 'default'
+          },
+          {
+            name: 'doyougotowork',
+            text: 'No :sweat_smile:',
+            type: 'button',
+            value: 'no_work',
+            style: 'default'
+          }
+        ]
+      }]
+    })
+    .route('handleMultipleDayAbsence', state)
   }
 
 })
 
 
-slapp.route('handleOneDayAbsence', (msg) => {
-  msg.say('Vamonos riquis un dia de ausencia')
+//*********************************************
+// (1) El usuario aviso de un dia de ausencia
+//*********************************************
+slapp.route('handleOneDayAbsence', (msg, state) => {
+
+  // Validacion de que selecciona un opcion valida para el caminito
+  if (msg.type !== 'action') {
+    msg
+      .say('Porfavor indica si vas a trabajar')
+      .route('handleOneDayAbsence', state)
+    return
+  }
+
+  let goToWork = msg.body.actions[0].value
+  msg.say('Respondiste'+goToWork)
+
+  if (answer == 'yes_work') {
+    msg.say('Si vas a trabajar')
+  }else{
+    msg.say('No vas a trabajar')
+  }
+
 })
 
-slapp.route('handleMultipleDayAbsence', (msg) => {
+//*********************************************
+// (2) El usuario aviso de mas de un dia de ausencia
+//*********************************************
+slapp.route('handleMultipleDayAbsence', (msg, state) => {
   msg.say('Vamonos riquis varios dias que no?')
 })
 

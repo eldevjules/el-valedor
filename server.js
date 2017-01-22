@@ -433,16 +433,14 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
                'location': 'Karmapulse',
                'description': 'Días de Home Office.',
                'start': {
-                   'dateTime': '2017-05-28T09:00:00-07:00',
-                   'timeZone': 'America/Los_Angeles',
+                   'dateTime': '2017-01-22T09:00:00-07:00',
+                   'timeZone': 'America/Mexico_City',
                },
                'end': {
-                   'dateTime': '2017-05-28T17:00:00-07:00',
-                   'timeZone': 'America/Los_Angeles',
+                   'dateTime': '2017-01-22T09:00:00-07:00',
+                    'timeZone': 'America/Mexico_City',
                },
-               'recurrence': [
-                   'RRULE:FREQ=DAILY;COUNT=2'
-               ],
+               'recurrence': [],
                'attendees': [
                    {'email': 'lpage@example.com'},
                    {'email': 'sbrin@example.com'},

@@ -110,7 +110,7 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   if (answer == 'ninguno') {
     // the answer was not affirmative
     msg.respond(msg.body.response_url, {
-      text: `OK, muy gracioso. :unamused:  #QueFeoQueSeasAsi `,
+      text: `OK, muy gracioso. :unamused: #NoMeDespiertesALoTonto  #QueFeoQueSeasAsi `,
       delete_original: true
     })
     // notice we did NOT specify a route because the conversation is over
@@ -118,7 +118,6 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   }
 
   // use the state that's been passed through the flow to figure out the
-  // elapsed time
   var elapsed = (Date.now() - state.requested)/1000
   msg.respond(msg.body.response_url, {
     text: `You requested me to do it ${elapsed} seconds ago`,
@@ -127,7 +126,7 @@ slapp.route('hanleDaysRequested', (msg, state) => {
 
   // simulate doing some work and send a confirmation.
   setTimeout(() => {
-    msg.say('I "did it"')
+    msg.say('Ok voy a pedirte mas datos')
   }, 3000)
 
 })
@@ -151,7 +150,11 @@ slapp.message('.*', ['direct_message'], (msg) => {
       'Siento como que esta bonita amistad que comenzó a germinar, el día de hoy ya está dando sus frutos',
       'No entiendo tu indiferiencia para conmigo',
       'Amaá, el Chino va pa mi cuarto a romperme lo que más me gusta "¡MI POSTER DEL AMÉRICA!"',
-      'JIJO... MANO.. QUIEN FUERA KALIMAN!!!'
+      'JIJO... MANO.. QUIEN FUERA KALIMAN!!!',
+      'Es de humanos equivocarse, más sin en cambio, es sublime perdonar.',
+      'CHINO.! nunca me imagine que en tu corazon cupiera tanta burla...',
+      'A Caray! Hijoles, que pena. Esque se me había olvidado que si invite a comer a Maria de todos los ángeles, por lo mismo de que me salvó mi vida.',
+      'No creas que no tengo en cuenta todos los bonitos detalles que tienes para conmigo... Nomas ¿Si te molesto con la tele?'
     ])
   //}
 })

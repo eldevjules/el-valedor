@@ -356,7 +356,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let idate = dateRequested.getFullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate();
   let fdate = dateRequested.getFullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate() + 1;
 
-  data = {
+  let data = {
     fields : {
       identifier: {'es-MX': absenceType},
       user: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},

@@ -352,7 +352,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   };
 
   let now = new Date();
-  let reported_date = now.getfullYear()+'-'+now.getMonth()+'-'+now.getDate();
+  let reported_date = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
   let idate = dateRequested.getFullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate();
   let fdate = dateRequested.getFullYear()+'-'+dateRequested.getMonth()+'-'+dateRequested.getDate() + 1;
 

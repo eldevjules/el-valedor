@@ -44,7 +44,6 @@ slapp.message('aiuda', ['mention', 'direct_message'], (msg) => {
 slapp.message('novoyir', ['direct_message'], (msg) => {
   
   var state = { requested: Date.now() }
-
   msg.say({
     text: '',
     attachments: [{
@@ -181,19 +180,58 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
   // Validacion de que selecciona un opcion valida para el caminito
   if (msg.type !== 'action') {
     msg
-      .say('Porfavor indica si vas a trabajar')
+      .say('Porfavor indica si vas a trabajar :computer:')
       .route('handleOneDayAbsence', state)
     return
   }
 
+  //Toma el valor de respuesta y borra la botonera
   let goToWork = msg.body.actions[0].value
   msg.respond(msg.body.response_url, { delete_original: true })
-  msg.say('Respondiste'+goToWork)
 
   if (goToWork == 'yes_work') {
-    msg.say('Si vas a trabajar')
+    state['work'] = 'yes';
+    msg.say({
+      text: '',
+      attachments: [{
+        text: '',
+        title: '',
+        image_url: 'https://img.buzzfeed.com/buzzfeed-static/static/2016-06/30/19/campaign_images/buzzfeed-prod-web12/18-situaciones-que-te-haran-decir-uy-asi-que-chis-2-19549-1467327920-4_big.jpg',
+        title_link: 'Uy asi que chiste!',
+        color: '#7CD197'
+      }]
+    }) //uy asi que chiste
+    .say('No, mentira! que bueno que vas a trabajar :metal:')
+    .say({
+      text: 'ahora dime, ¿que día vas a reportar?',
+      attachments: [{
+        text: '',
+        callback_id: 'ho',
+        actions: [
+          {
+            name: 'hotoreport',
+            text: 'Hoy, sorry! :sob:',
+            type: 'button',
+            value: 'hoToday',
+            style: 'default'
+          },
+          {
+            name: 'hotoreport',
+            text: 'Un día tomado de mis prestaciones :innocent:',
+            type: 'button',
+            value: 'hoBenefit',
+            style: 'default'
+          }
+        ]
+      }]
+    })
+    .route('handleHomeOffice', state)
   }else{
-    msg.say('No vas a trabajar')
+    state['work'] = 'no';
+    msg.say('No vas a trabajar') //oye si nos vas a trabajar permitenos saber porque
+    //imprevisto
+    //vacaciones
+    //capacitacion
   }
 
 })
@@ -204,6 +242,67 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
 slapp.route('handleMultipleDayAbsence', (msg, state) => {
   msg.say('Vamonos riquis varios dias que no?')
 })
+
+
+//*********************************************
+// (1.1) El usuario pidio un Home Office
+//*********************************************
+slapp.route('handleHomeOffice', (msg, state) => {
+
+  // Validacion de que selecciona un opcion valida para el caminito
+  if (msg.type !== 'action') {
+    msg
+      .say('Porfavor indica para cuando es el HO')
+      .route('handleHomeOffice', state)
+    return
+  }
+
+  //Toma el valor de respuesta y borra la botonera
+  let typeHO = msg.body.actions[0].value
+  msg.respond(msg.body.response_url, { delete_original: true })
+
+
+  if (typeHO == 'hoToday') {
+    state['ho_type'] = 'today';
+    msg.say({
+      text: '',
+      attachments: [{
+        text: '',
+        title: '',
+        image_url: 'https://d.wattpad.com/story_parts/199994350/images/14234e1781fcdde7.jpg',
+        title_link: 'Oye viejo, tranquilo',
+        color: '#7CD197'
+      }]
+    }) //oye tranquilo viejo
+    .say('No recomendamos pedir Home Office el mero día. Algún karma se pondrá triste por esto :slightly_frowning_face:')
+    .say("Pero vamos sabemos que no fue a proposito, cuentanos ¿Que paso?")
+    .route('handleHomeOfficeToday', state)
+  }else{
+    state['ho_type'] = 'benefit';
+    msg.say('danos la fecha de pa cuando o que') 
+  }
+
+})
+
+//*********************************************
+// (1.1.1) El usuario pidio un Home Office para el mero día
+//*********************************************
+slapp.route('handleHomeOfficeToday', (msg, state) => {
+  var reason = (msg.body.event && msg.body.event.text) || ''
+  // user may not have typed text as their next action, ask again and re-route
+  if (!text) {
+    return msg
+      .say("Seguimos esperando que nos expliques porque HO para hoy :wink:")
+      .route('handleHomeOfficeToday', state)
+  }
+  // add their reason to state
+  state['reason'] = reason;
+
+  msg
+    .say('Gracias por avisarnos. Ahora podemos organizarnos y seguir ganando en la vida')
+    .say(`Que recolectamos: \`\`\`${JSON.stringify(state)}\`\`\``)
+})
+
 
 
 // Cacha todas las respuestas que no entienda y te da un poco de sabiduria a cambio

@@ -29,6 +29,24 @@ var clientContentful = contentful.createClient({
 
 
 var space = "x9fpf0wxefkr";
+var absences = {
+    // Home Office Imprevisto
+    HOIm: '5owv8SrNQcqgKOoQ6GyoIM',
+    // Recuperaciòn Mèdica
+    RM: '6Td4Rc39ksacyqgIw4kQEe',
+    //Maternidad/Paternidad
+    MP:'3X9eHPRCDCQ4MoOw8QS4UM',
+    //Home Office
+    HO: '2E9OOlbePeIkaOqsuuU6kE',
+    //Imprevisto Parcial
+    IMP: '3MwlcPWUWAyUW68o2eWWeI',
+    //Vacaciones
+    VACA: '6g9R3v0lgsUwESKquaki8O',
+    //Capacitación
+    CAP: '3C7F7sKPaUUmow2K4Uem0C',
+    //Imprevisto
+    IMP: '6xk43bzavu0E28qYe2YA08'
+};
 
 // Google Calendar 
 const googleAuth = require('google-auth-library');
@@ -346,9 +364,76 @@ slapp.route('handleHomeOfficeToday', (msg, state) => {
   // add their reason to state
   state['reason'] = reason;
 
+  //********************************************************************
+  state['requestedDate'] = new Date();
+  //Get User identifier 
+  let userIdentifier = '58KQf17LzqkOkMCoqUKaMk';
+  let directLider = "7eaE0FMPOE2cMykKEmQQue";
+  //Get absence type
+  let absenceType = 'HOIm';
+
+  let data = {
+    fields : {
+      identifier: {'es-MX': absenceType},
+      user: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
+      who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: directLider}}},
+      type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
+      group: {'es-MX': 'Impredecible'},
+      reported_date: {'es-MX': state['requestedDate']},
+      full_day: {'es-MX': true},
+      start_time: {'es-MX': state['requestedDate']},
+      end_time: {'es-MX': state['requestedDate']},
+      modification_date: {'es-MX': state['requestedDate']},
+      expiration_date: {'es-MX': state['requestedDate']},
+      status: {'es-MX': 'Aprobada'},
+      detail: {'es-MX': ''},
+      concept: {'es-MX': ''}
+    }
+  }
+  //********************************************************************
+  //********************************************************************
+  //Insertar en Contenful
+   clientManagement.getSpace(space)
+   .then((space) => {
+      console.log('Space');
+      return space.createEntry('absence', data)
+   })
+   .then((entry) => {
+      console.log(entry.fields)
+      entry.publish()
+   })
+   .catch((error) => console.log(error))
+   //********************************************************************
+   //********************************************************************
+  //Crear event en calendar
+  let event = {
+       'summary': 'HomeOffice',
+       'location': 'Karmapulse',
+       'description': 'Día de Home Office.',
+       'start': {
+           'dateTime': '2017-01-22T10:00:00-06:00',
+           'timeZone': 'America/Mexico_City',
+       },
+       'end': {
+           'dateTime': '2017-01-22T20:00:00-06:00',
+            'timeZone': 'America/Mexico_City',
+       },
+       'recurrence': [],
+   };
+  //Obtener access_token para publicacion
+  clientContentful.getEntry(userIdentifier)
+  .then((entry) => {
+    let auth = googleAuthorize(entry.fields.accessToken)
+    createCalendarEvent(auth, event, msg)
+  })
+  .catch((error) => console.log(error))
+  //********************************************************************
+  //********************************************************************
   msg
     .say('Gracias por avisarnos. Ahora podemos organizarnos y seguir ganando en la vida')
     .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+  //********************************************************************
+  
 })
 
 //*********************************************
@@ -365,6 +450,8 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       .say("Ahora solo procura ingresarlo en el formato de YYYY-MM-DD")
       .route('handleHomeOfficeBenefit', state)
   }
+
+  //********************************************************************
   // add their reason to state
   state['requestedDate'] = dateRequested;
 
@@ -376,30 +463,14 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let directLider = "7eaE0FMPOE2cMykKEmQQue";
   //Get absence type
   let absenceType = 'HO';
-  let absences = {
-    // Home Office Imprevisto
-    HOIm: '5owv8SrNQcqgKOoQ6GyoIM',
-    // Recuperaciòn Mèdica
-    RM: '6Td4Rc39ksacyqgIw4kQEe',
-    //Maternidad/Paternidad
-    MP:'3X9eHPRCDCQ4MoOw8QS4UM',
-    //Home Office
-    HO: '2E9OOlbePeIkaOqsuuU6kE',
-    //Imprevisto Parcial
-    IMP: '3MwlcPWUWAyUW68o2eWWeI',
-    //Vacaciones
-    VACA: '6g9R3v0lgsUwESKquaki8O',
-    //Capacitación
-    CAP: '3C7F7sKPaUUmow2K4Uem0C',
-    //Imprevisto
-    IMP: '6xk43bzavu0E28qYe2YA08'
-  };
+  
 
   let now = new Date();
   let reported_date = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
   let idate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+dateRequested.getDate();
   let fdate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+(dateRequested.getDate() + 1);
   let sdate = '2017-01-23';
+
 
   let data = {
     fields : {
@@ -419,7 +490,9 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       concept: {'es-MX': 'Ho Prestación 1 Semestre 2017'}
     }
   }
+  //********************************************************************
 
+  //********************************************************************
   //Insertar en Contenful
    clientManagement.getSpace(space)
    .then((space) => {
@@ -431,7 +504,9 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       entry.publish()
    })
    .catch((error) => console.log(error))
+   //********************************************************************
 
+  //********************************************************************
   //Crear event en calendar
   let event = {
        'summary': 'HomeOffice',
@@ -454,20 +529,21 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
            'overrides': [{'method': 'email', 'minutes': 24 * 60}],
        },
    };
-
-  //Obtener access_token
+  //Obtener access_token para publicacion
   clientContentful.getEntry(userIdentifier)
   .then((entry) => {
-    msg.say("Mira tu token: " + entry.fields.accessToken)
     let auth = googleAuthorize(entry.fields.accessToken)
     createCalendarEvent(auth, event, msg)
   })
   .catch((error) => console.log(error))
+  //********************************************************************
 
+  //********************************************************************
   msg
     .say('Tu HO ha sido solicitada correctamente para el día '+dateRequested)
     //.say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
     .say('Se ha agregado tu peticióna tu Google Calendar para que a nadie se nos olvide :ok_hand:')
+  //********************************************************************
 
 })
 

@@ -382,7 +382,6 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
    })
    .then((entry) => {
       console.log(entry.fields)
-      res.send entry
       entry.publish()
    })
    .catch((error) => console.log(error))

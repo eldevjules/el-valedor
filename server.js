@@ -217,7 +217,7 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
           },
           {
             name: 'hotoreport',
-            text: 'Un día tomado de mis prestaciones :innocent:',
+            text: 'Otro día :innocent:',
             type: 'button',
             value: 'hoBenefit',
             style: 'default'
@@ -256,11 +256,9 @@ slapp.route('handleHomeOffice', (msg, state) => {
       .route('handleHomeOffice', state)
     return
   }
-
   //Toma el valor de respuesta y borra la botonera
   let typeHO = msg.body.actions[0].value
   msg.respond(msg.body.response_url, { delete_original: true })
-
 
   if (typeHO == 'hoToday') {
     state['ho_type'] = 'today';
@@ -279,7 +277,9 @@ slapp.route('handleHomeOffice', (msg, state) => {
     .route('handleHomeOfficeToday', state)
   }else{
     state['ho_type'] = 'benefit';
-    msg.say('danos la fecha de pa cuando o que') 
+    msg.say('Bien! ¿Que día quieres tomar?') 
+    msg.respond(msg.body.response_url, { text:'Usar el formato DD/MM/YYYY' })
+    .route('handleHomeOfficeBenefit', state)
   }
 
 })
@@ -300,9 +300,31 @@ slapp.route('handleHomeOfficeToday', (msg, state) => {
 
   msg
     .say('Gracias por avisarnos. Ahora podemos organizarnos y seguir ganando en la vida')
-    .say(`Que recolectamos: \`\`\`${JSON.stringify(state)}\`\`\``)
+    .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
 })
 
+//*********************************************
+// (1.1.2) El usuario pidio un Home Office para otro día
+//*********************************************
+slapp.route('handleHomeOfficeBenefit', (msg, state) => {
+  var dateString = (msg.body.event && msg.body.event.text) || ''
+  var dateRequested = new Date(dateString);
+
+  // user may not have typed text as their next action, ask again and re-route
+  if (!dateString || ) {
+    return msg
+      .say("Al parecer no escribiste un formato de fecha válido, pero a cualquier nos pasa")
+      .say("Ahora solo procura ingresarlo en el formato de DD/MM/YYYY")
+      .route('handleHomeOfficeBenefit', state)
+  }
+  // add their reason to state
+  state['requestedDate'] = dateRequested;
+
+  var  humaDate = dateRequested.toString()
+  msg
+    .say('Tu HO ha sido solicitada correctamente para el día: '+humaDate)
+    .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
+})
 
 
 // Cacha todas las respuestas que no entienda y te da un poco de sabiduria a cambio

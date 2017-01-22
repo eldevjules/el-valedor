@@ -463,14 +463,14 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let directLider = "7eaE0FMPOE2cMykKEmQQue";
   //Get absence type
   let absenceType = 'HO';
-  
 
-  let now = new Date();
-  let reported_date = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  let idate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+dateRequested.getDate();
-  let fdate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+(dateRequested.getDate() + 1);
-  let sdate = '2017-01-23';
 
+  requestedDate.setHours(10);
+  requestedDate.setMinutes(0);
+  requestedDate.setSeconds(0);
+
+  let fDate = new Date( requestedDate.toString() );
+  fDate.setHours(20);
 
   let data = {
     fields : {
@@ -479,12 +479,11 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: directLider}}},
       type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
       group: {'es-MX': 'Prestación'},
-      reported_date: {'es-MX': sdate},
+      reported_date: {'es-MX': requestedDate},
       full_day: {'es-MX': true},
-      start_time: {'es-MX': sdate},
-      end_time: {'es-MX': sdate},
-      modification_date: {'es-MX': sdate},
-      expiration_date: {'es-MX': sdate},
+      start_time: {'es-MX': requestedDate},
+      end_time: {'es-MX': fDate},
+      modification_date: {'es-MX': requestedDate},
       status: {'es-MX': 'Aprobada'},
       detail: {'es-MX': ''},
       concept: {'es-MX': 'Ho Prestación 1 Semestre 2017'}
@@ -513,11 +512,11 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
        'location': 'Karmapulse',
        'description': 'Día de Home Office.',
        'start': {
-           'dateTime': '2017-01-23T10:00:00-06:00',
+           'dateTime': requestedDate,
            'timeZone': 'America/Mexico_City',
        },
        'end': {
-           'dateTime': '2017-01-23T20:00:00-06:00',
+           'dateTime': fDate,
             'timeZone': 'America/Mexico_City',
        },
        'recurrence': [],

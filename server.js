@@ -407,7 +407,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       user: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
       who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: directLider}}},
       type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
-      group: {'es-MX': 'Ho por Prestación'},
+      group: {'es-MX': 'Prestación'},
       reported_date: {'es-MX': sdate},
       full_day: {'es-MX': true},
       start_time: {'es-MX': sdate},
@@ -458,6 +458,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   //Obtener access_token
   clientContentful.getEntry(userIdentifier)
   .then((entry) => {
+    msg.say("Mira tu token: " + entry.fields.accessToken)
     let auth = googleAuthorize(entry.fields.accessToken)
     createCalendarEvent(auth, event, msg)
   })

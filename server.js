@@ -115,9 +115,34 @@ slapp.route('hanleDaysRequested', (msg, state) => {
   msg.respond(msg.body.response_url, { delete_original: true })
   //Bifurca la conversación
   if (answer == 'uno') {
-    msg.say('Asi que no vendrás un día :thinking_face:').route('handleOneDayAbsence')
+    msg.say('Asi que no vendrás un día a la oficina :thinking_face:')
+    .say({
+      text: 'pero ¿y vas a trabajar? :muscle:',
+      attachments: [{
+        text: '',
+        callback_id: 'aviso_undia',
+        actions: [
+          {
+            name: 'doyougotowork',
+            text: 'Si, obvio :nerd_face:',
+            type: 'button',
+            value: 'yes_work',
+            style: 'default'
+          },
+          {
+            name: 'doyougotowork',
+            text: 'No :sweat_smile:',
+            type: 'button',
+            value: 'varios',
+            style: 'default'
+          }
+        ]
+      }]
+    })
+    .route('handleOneDayAbsence')
   }else{
-    msg.say('Vas a faltar mas de un día :speak_no_evil:').route('handleMultipleDayAbsence')
+    msg.say('Vas a faltar mas de un día :speak_no_evil:')
+    //.route('handleMultipleDayAbsence')
   }
 
 })
@@ -157,6 +182,14 @@ slapp.message('.*', ['direct_message'], (msg) => {
     ])
 })
 //*********************************************
+
+
+
+
+
+
+
+
 
 
 
@@ -214,15 +247,6 @@ slapp
 
 
 
-
-
-
-
-
-
-
-
-
 // Can use a regex as well
 slapp.message(/^(thanks|thank you)/i, ['mention', 'direct_message'], (msg) => {
   // You can provide a list of responses, and a random one will be chosen
@@ -238,19 +262,7 @@ slapp.message(/^(thanks|thank you)/i, ['mention', 'direct_message'], (msg) => {
 
 
 
-// demonstrate returning an attachment...
-slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
-  msg.say({
-    text: 'Check out this amazing attachment! :confetti_ball: ',
-    attachments: [{
-      text: 'Slapp is a robust open source library that sits on top of the Slack APIs',
-      title: 'Slapp Library - Open Source',
-      image_url: 'https://storage.googleapis.com/beepboophq/_assets/bot-1.22f6fb.png',
-      title_link: 'https://beepboophq.com/',
-      color: '#7CD197'
-    }]
-  })
-})
+
 
 
 

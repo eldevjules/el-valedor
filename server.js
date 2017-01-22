@@ -322,7 +322,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
 
   var  humaDate = dateRequested.toString()
   msg
-    .say('Tu HO ha sido solicitada correctamente para el día: '+humaDate)
+    .say('Tu HO ha sido solicitada correctamente para el día '+humaDate)
     .say(`Ausencia: \`\`\`${JSON.stringify(state)}\`\`\``)
 })
 

@@ -355,6 +355,7 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
   let reported_date = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
   let idate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+dateRequested.getDate();
   let fdate = dateRequested.getFullYear()+'-'+(dateRequested.getMonth()+1)+'-'+(dateRequested.getDate() + 1);
+  let sdate = '2017-01-24';
 
   let data = {
     fields : {
@@ -363,12 +364,12 @@ slapp.route('handleHomeOfficeBenefit', (msg, state) => {
       who_approves: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: userIdentifier}}},
       type: {'es-MX': {sys: {type: "Link", linkType: "Entry", id: absences[absenceType] }}},
       group: {'es-MX': 'Prestación'},
-      reported_date: {'es-MX': reported_date},
+      reported_date: {'es-MX': sdate},
       full_day: {'es-MX': true},
-      start_time: {'es-MX': idate},
-      end_time: {'es-MX': fdate},
-      modification_date: {'es-MX': idate},
-      expiration_date: {'es-MX': fdate},
+      start_time: {'es-MX': sdate},
+      end_time: {'es-MX': sdate},
+      modification_date: {'es-MX': sdate},
+      expiration_date: {'es-MX': sdate},
       status: {'es-MX': 'Aprovada'},
       detail: {'es-MX': 'I hate my coworkers'},
       concept: {'es-MX': 'Concepto'}

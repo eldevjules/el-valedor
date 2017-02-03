@@ -246,7 +246,7 @@ slapp.route('handleOneDayAbsence', (msg, state) => {
   // Validacion de que selecciona un opcion valida para el caminito
   if (msg.type !== 'action') {
     msg
-      .say('Porfavor indica si vas a trabajar :computer:')
+      .say('Porfavor indica si vas a trabajar va :computer:')
       .route('handleOneDayAbsence', state)
     return
   }
